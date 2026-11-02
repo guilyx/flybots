@@ -21,3 +21,23 @@ def test_version_matches_the_installed_distribution():
     import flybots
 
     assert flybots.__version__ == version("flybots")
+
+
+def test_citation_version_matches_the_package():
+    """``CITATION.cff`` is the one other place the version has to live.
+
+    GitHub's "Cite this repository" button and every reference manager read
+    it, so a citation pinned to an old version sends readers to code that
+    no longer matches what they are citing. It cannot be derived at build
+    time the way ``__version__`` is, so this test is what keeps it honest.
+    """
+    from pathlib import Path
+
+    cff = (Path(__file__).resolve().parents[1] / "CITATION.cff").read_text()
+    cited = next(
+        line.split(":", 1)[1].strip() for line in cff.splitlines() if line.startswith("version:")
+    )
+    assert cited == version("flybots"), (
+        f"CITATION.cff says {cited}, the package is {version('flybots')}: "
+        "bump CITATION.cff (version and date-released) with the release."
+    )
