@@ -2,9 +2,10 @@
 """Reusable animation recorder for all quadrotor simulations.
 
 Every simulation script creates a `SimAnimator`, adds frames via its
-``update`` callback, and calls :meth:`save` to write a GIF. The class
-always uses the *Agg* backend so it works headless on CI and remote
-machines.
+``update`` callback, and calls :meth:`save` to write a GIF. Saving goes
+through Pillow's writer, which rasterises each frame itself, so it works
+headless and under whatever backend the caller has chosen — the class never
+changes that choice.
 
 Typical usage
 -------------
@@ -23,7 +24,6 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-import matplotlib
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,8 +31,11 @@ from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d import Axes3D
 from numpy.typing import NDArray
 
-# Force non-interactive backend so we never hit the FigureCanvasAgg warning.
-matplotlib.use("Agg")
+# No ``matplotlib.use(...)`` here. The backend is process-wide state that
+# belongs to whoever imported this library: forcing Agg at import time
+# silently broke ``plt.show()`` and notebook inline plots for anyone who so
+# much as imported ``flybots.visualization``. Headless machines fall back to
+# Agg on their own, and every simulation script selects it explicitly.
 
 # ── defaults ──────────────────────────────────────────────────────────────────
 _DEFAULT_FPS = 25

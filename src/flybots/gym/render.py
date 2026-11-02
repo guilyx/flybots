@@ -4,6 +4,12 @@
 Draws the flown trajectories against the task's goal so a trained policy
 can be inspected rather than just scored. Matplotlib only — no simulator
 window, no OpenGL.
+
+Both functions draw on a bare :class:`~matplotlib.figure.Figure` rather
+than through ``pyplot``, and never call ``matplotlib.use``. The backend is
+process-wide state that belongs to the caller: switching it here would
+silently stop ``plt.show()`` and a notebook's inline plots working for the
+rest of their session, which is exactly where these renders get called.
 """
 
 from __future__ import annotations
@@ -47,18 +53,17 @@ def render_episode(
     fps
         Animation frame rate.
     """
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
     from matplotlib.animation import FuncAnimation, PillowWriter
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+    from matplotlib.figure import Figure
 
     path = Path(path)
     if path.suffix != ".gif":
         path = path.with_suffix(".gif")
     path.parent.mkdir(parents=True, exist_ok=True)
 
-    figure = plt.figure(figsize=(7.2, 5.4), facecolor=_INK)
+    figure = Figure(figsize=(7.2, 5.4), facecolor=_INK)
+    FigureCanvasAgg(figure)
     axes = figure.add_subplot(111, projection="3d")
     axes.set_facecolor(_INK)
 
@@ -109,7 +114,6 @@ def render_episode(
 
     animation = FuncAnimation(figure, update, frames=len(frame_indices), blit=False)
     animation.save(path, writer=PillowWriter(fps=fps), dpi=100, savefig_kwargs={"facecolor": _INK})
-    plt.close(figure)
     return path
 
 
@@ -120,16 +124,16 @@ def render_learning_curve(
     title: str = "learning curve",
 ) -> Path:
     """Plot per-generation returns to a PNG."""
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+    from matplotlib.figure import Figure
 
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
 
     generations = [row["generation"] for row in history]
-    figure, axes = plt.subplots(figsize=(7.0, 4.0), facecolor=_INK)
+    figure = Figure(figsize=(7.0, 4.0), facecolor=_INK)
+    FigureCanvasAgg(figure)
+    axes = figure.subplots()
     axes.set_facecolor(_INK)
     axes.plot(
         generations,
@@ -164,5 +168,4 @@ def render_learning_curve(
 
     figure.tight_layout()
     figure.savefig(path, dpi=140, facecolor=_INK)
-    plt.close(figure)
     return path
