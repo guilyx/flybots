@@ -113,7 +113,7 @@ def main() -> None:
     title = viz.ax3d.set_title("Takeoff")
 
     anim = SimAnimator("flight_ops_demo", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     def _current_phase(k: int) -> str:
         for end, name in phase_ends:

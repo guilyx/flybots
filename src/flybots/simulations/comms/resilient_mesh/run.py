@@ -241,7 +241,7 @@ def main() -> None:
     link_model = GaussianLink(SIGMA)
 
     anim = SimAnimator("resilient_mesh", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(frame: int) -> None:
         step = idx[frame]

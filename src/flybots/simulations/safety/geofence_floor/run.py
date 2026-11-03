@@ -191,7 +191,7 @@ def main() -> None:
     title = ax3d.set_title("t = 0.0 s")
 
     anim = SimAnimator("geofence_floor", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(frame: int) -> None:
         step = idx[frame]

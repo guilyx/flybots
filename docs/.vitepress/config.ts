@@ -73,6 +73,7 @@ export default defineConfig({
         items: [
           { text: 'Conventions', link: '/guide/conventions' },
           { text: 'CLI reference', link: '/guide/cli' },
+          { text: 'Build on flybots', link: '/guide/extending' },
           { text: 'Roadmap', link: '/ROADMAP' },
           { text: 'Contributing', link: `${REPO}/blob/main/CONTRIBUTING.md` },
           { text: 'Changelog', link: `${REPO}/blob/main/CHANGELOG.md` },
@@ -107,6 +108,7 @@ export default defineConfig({
           items: [
             { text: 'Frames and conventions', link: '/guide/conventions' },
             { text: 'Architecture', link: '/guide/architecture' },
+            { text: 'Build on flybots', link: '/guide/extending' },
           ],
         },
       ],

@@ -149,7 +149,7 @@ def main() -> None:
 
     anim = SimAnimator("costmap_navigation", out_dir=Path(__file__).parent, dpi=80)
     fig = plt.figure(figsize=(16, 7))
-    anim._fig = fig
+    anim.figure = fig
     gs = fig.add_gridspec(1, 4, width_ratios=[1.25, 1, 1, 1], wspace=0.25)
     ax3d = fig.add_subplot(gs[0, 0], projection="3d")
     ax_base = fig.add_subplot(gs[0, 1])

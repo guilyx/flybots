@@ -197,7 +197,7 @@ def main() -> None:
     viz.draw_path(path_3d, color="cyan", lw=0.7, alpha=0.3, label="Plan")
 
     anim = SimAnimator("ekf", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     trail_true = viz.create_trail_artists(color="black")
     trail_est = viz.create_trail_artists(color="dodgerblue")

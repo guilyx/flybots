@@ -146,7 +146,7 @@ def main() -> None:
     title = viz.ax3d.set_title("Phase 1: Trajectory Generation")
 
     anim = SimAnimator("min_snap", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     def update(f: int) -> None:
         if f < n_tf:

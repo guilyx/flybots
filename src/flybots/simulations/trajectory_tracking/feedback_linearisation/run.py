@@ -115,7 +115,7 @@ def main() -> None:
     ax_v.legend(fontsize=5, loc="lower right")
 
     anim = SimAnimator("feedback_linearisation", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
     title = viz.ax3d.set_title("Feedback Lin.")
 
     def update(f: int) -> None:

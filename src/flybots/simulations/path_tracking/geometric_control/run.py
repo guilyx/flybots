@@ -114,7 +114,7 @@ def main() -> None:
     ax_t.legend(fontsize=5, loc="lower right")
 
     anim = SimAnimator("geometric_control", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
     title = viz.ax3d.set_title("Geometric SO(3)")
 
     def update(f: int) -> None:

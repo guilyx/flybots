@@ -236,7 +236,7 @@ def main() -> None:
     veh_arts: list = []
 
     anim = SimAnimator("occupancy_mapping", out_dir=Path(__file__).parent, dpi=80)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(f: int) -> None:
         k = scan_indices[min(f, n_frames - 1)]

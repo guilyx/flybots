@@ -53,6 +53,26 @@ class TestCatalogue:
         grouped = catalogue.categories()
         assert sum(len(v) for v in grouped.values()) == len(catalogue.discover())
 
+    @pytest.mark.parametrize("required", ["__init__.py", "__main__.py", "README.md"])
+    def test_every_simulation_is_a_complete_package(self, required):
+        """`flybots info` advertises `python -m ...` and a README for each entry.
+
+        Discovery only needs ``run.py``, so a new simulation without these
+        files would be listed and runnable through `flybots run`, while the
+        command printed next to it fails. See docs/guide/extending.md.
+        """
+        missing = [
+            entry.slug
+            for entry in catalogue.discover()
+            if not entry.directory.joinpath(required).is_file()
+        ]
+        assert not missing, f"simulations missing {required}: {missing}"
+
+    def test_every_simulation_has_a_one_line_summary(self):
+        """The first docstring line is what `flybots list` shows."""
+        blank = [entry.slug for entry in catalogue.discover() if not entry.summary]
+        assert not blank, f"simulations without a docstring summary: {blank}"
+
 
 class TestConsole:
     def test_style_is_a_noop_without_a_tty(self):

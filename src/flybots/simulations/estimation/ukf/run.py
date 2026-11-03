@@ -219,7 +219,7 @@ def main() -> None:
     ax_d.legend(fontsize=7)
 
     anim = SimAnimator("ukf", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     trail_true = viz.create_trail_artists(color="black")
     trail_est = viz.create_trail_artists(color="dodgerblue")

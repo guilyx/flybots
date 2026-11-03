@@ -185,7 +185,7 @@ def main() -> None:
 
     title = viz.ax3d.set_title("Phase 1: A* Exploration")
     anim = SimAnimator("astar_3d", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     n_explored_total = len(explored)
 

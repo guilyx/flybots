@@ -93,7 +93,7 @@ def main() -> None:
     ax_z.legend(fontsize=5, loc="lower right")
 
     anim = SimAnimator("pid_hover", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
     title = viz.ax3d.set_title("PID Hover")
 
     def update(f: int) -> None:

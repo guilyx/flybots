@@ -307,7 +307,7 @@ def main() -> None:
     # frame budget and resolution are trimmed to keep the rendered GIF in
     # line with the rest of the catalogue rather than four times their size.
     anim = SimAnimator("fixed_wing_mission", out_dir=Path(__file__).parent, dpi=64)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     trail = viz.create_trail_artists(color="black", lw=1.0)
     skip = max(1, used // 130)

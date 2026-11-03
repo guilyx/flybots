@@ -249,7 +249,7 @@ def run_visual_servoing(
     veh_arts: list = []
 
     anim = SimAnimator(sim_name, out_dir=out_dir, dpi=72)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(f: int) -> None:
         k = frames[f]

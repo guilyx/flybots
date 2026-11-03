@@ -84,6 +84,13 @@ def _cmd_list(args: argparse.Namespace) -> int:
 # ── run ───────────────────────────────────────────────────────────────────
 
 
+def _mtime(path: Path) -> int | None:
+    try:
+        return path.stat().st_mtime_ns
+    except FileNotFoundError:
+        return None
+
+
 def _cmd_run(args: argparse.Namespace) -> int:
     try:
         entries = catalogue.resolve(args.simulation)
@@ -101,6 +108,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
     failures = 0
     for entry in entries:
         print(f"\n{style('running', 'sky')} {style(entry.slug, 'bold')}")
+        before = _mtime(entry.directory / f"{entry.name}.gif")
         try:
             module = entry.load()
             module.main()
@@ -112,7 +120,9 @@ def _cmd_run(args: argparse.Namespace) -> int:
 
                 traceback.print_exc()
             continue
-        if entry.gif:
+        # Only claim a GIF this run actually wrote: with FLYBOTS_SKIP_GIF=1,
+        # or a simulation that does not animate, the file is the old one.
+        if entry.gif and _mtime(entry.gif) != before:
             print(
                 style(f"  wrote {entry.gif.relative_to(Path.cwd())}", "green")
                 if entry.gif.is_relative_to(Path.cwd())

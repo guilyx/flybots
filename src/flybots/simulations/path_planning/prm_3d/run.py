@@ -175,7 +175,7 @@ def main() -> None:
 
     title = viz.ax3d.set_title("PRM Roadmap")
     anim = SimAnimator("prm_3d", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     def update(f: int) -> None:
         p1_sample_end = N_SAMPLE
