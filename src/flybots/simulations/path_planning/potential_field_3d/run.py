@@ -126,7 +126,7 @@ def main() -> None:
     title = viz.ax3d.set_title("Phase 1: Potential Field Descent")
 
     anim = SimAnimator("potential_field_3d", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     def update(f: int) -> None:
         for q in quiver_artists:

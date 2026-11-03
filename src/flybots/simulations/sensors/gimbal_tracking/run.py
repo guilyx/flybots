@@ -165,7 +165,7 @@ def main() -> None:
     title = viz.ax3d.set_title("Gimbal Tracking Coverage Path")
 
     anim = SimAnimator("gimbal_tracking", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     frustum_depth = 20.0
 

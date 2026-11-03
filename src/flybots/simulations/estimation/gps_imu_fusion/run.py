@@ -237,7 +237,7 @@ def main() -> None:
     viz.ax3d.legend(fontsize=6, loc="upper left")
 
     anim = SimAnimator("gps_imu_fusion", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     skip = max(1, n_steps // 200)
     idx = list(range(0, n_steps, skip))

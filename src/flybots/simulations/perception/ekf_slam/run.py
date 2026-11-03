@@ -256,7 +256,7 @@ def main() -> None:
     viz.ax_top.legend(fontsize=6, loc="upper left")
 
     anim = SimAnimator("ekf_slam", out_dir=Path(__file__).parent, dpi=60)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     trail_true = viz.create_trail_artists(color="black")
     trail_est = viz.create_trail_artists(color="dodgerblue")

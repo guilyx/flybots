@@ -139,7 +139,7 @@ def main() -> None:
     title = viz.ax3d.set_title("")
 
     anim = SimAnimator("path_smoothing_demo", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     def update(f: int) -> None:
         p1_end = n_raw_show

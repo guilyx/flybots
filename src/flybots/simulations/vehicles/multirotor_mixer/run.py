@@ -251,7 +251,7 @@ def main() -> None:
     trails = [viz.create_trail_artists(color=colour) for _, colour, _, _ in flights]
 
     anim = SimAnimator("multirotor_mixer", out_dir=Path(__file__).parent, dpi=75)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     skip = max(1, steps // 130)
     frames = list(range(0, steps, skip))

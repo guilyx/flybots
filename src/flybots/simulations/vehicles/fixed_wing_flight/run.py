@@ -158,7 +158,7 @@ def main() -> None:
     ax_d.legend(fontsize=6, loc="lower right", ncol=2)
 
     anim = SimAnimator("fixed_wing_flight", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     trail_arts = viz.create_trail_artists(color="royalblue")
 

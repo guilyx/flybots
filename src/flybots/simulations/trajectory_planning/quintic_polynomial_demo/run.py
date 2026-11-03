@@ -116,7 +116,7 @@ def main() -> None:
     title = viz.ax3d.set_title("Phase 1: Quintic Polynomial Generation")
 
     anim = SimAnimator("quintic_polynomial_demo", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     quiver_arts: list = []
 

@@ -44,6 +44,15 @@ _DEFAULT_FIGSIZE_3D = (7, 6)
 _DEFAULT_FIGSIZE_2D = (8, 5)
 
 
+def _skip_gif() -> bool:
+    """Whether to skip writing the GIF (fast runs, CI, profiling).
+
+    ``FLYBOTS_SKIP_GIF=1`` is the switch. ``UAV_SIM_SKIP_GIF`` is its name
+    from before the 2.0 rename and is still honoured.
+    """
+    return any(os.getenv(var, "0") == "1" for var in ("FLYBOTS_SKIP_GIF", "UAV_SIM_SKIP_GIF"))
+
+
 class SimAnimator:
     """Create, animate, and save a simulation GIF.
 
@@ -57,6 +66,10 @@ class SimAnimator:
         Frames per second in the GIF.
     dpi:
         Dots per inch for each frame.
+    figure:
+        A figure you built yourself (a :class:`ThreePanelViz` figure, a
+        custom ``plt.figure`` layout, ...). Leave it out and call
+        :meth:`figure_3d` or :meth:`figure_2d` instead.
     """
 
     def __init__(
@@ -65,13 +78,24 @@ class SimAnimator:
         out_dir: Path | str = ".",
         fps: int = _DEFAULT_FPS,
         dpi: int = _DEFAULT_DPI,
+        *,
+        figure: Figure | None = None,
     ) -> None:
         self.name = name
         self.out_dir = Path(out_dir)
         self.fps = fps
         self.dpi = dpi
-        self._fig: Figure | None = None
+        self._fig: Figure | None = figure
         self._anim: animation.FuncAnimation | None = None
+
+    @property
+    def figure(self) -> Figure | None:
+        """The figure that :meth:`animate` will record."""
+        return self._fig
+
+    @figure.setter
+    def figure(self, figure: Figure) -> None:
+        self._fig = figure
 
     # ── figure factories ──────────────────────────────────────────────────
 
@@ -185,7 +209,10 @@ class SimAnimator:
             Delay between frames in ms.  Defaults to ``1000 / fps``.
         """
         if self._fig is None:
-            raise RuntimeError("Create a figure first (figure_3d / figure_2d).")
+            raise RuntimeError(
+                "No figure to animate: call figure_3d() / figure_2d(), or pass "
+                "your own with SimAnimator(..., figure=fig) or anim.figure = fig."
+            )
         if interval_ms is None:
             interval_ms = int(1000 / self.fps)
         self._anim = animation.FuncAnimation(
@@ -199,8 +226,8 @@ class SimAnimator:
             raise RuntimeError("Call animate() before save().")
         self.out_dir.mkdir(parents=True, exist_ok=True)
         out = self.out_dir / f"{self.name}.gif"
-        if os.getenv("UAV_SIM_SKIP_GIF", "0") == "1":
-            print(f"  Skipping GIF save (UAV_SIM_SKIP_GIF=1) → {out}", flush=True)
+        if _skip_gif():
+            print(f"  Skipping GIF save (FLYBOTS_SKIP_GIF=1) → {out}", flush=True)
             # Avoid matplotlib warning when intentionally skipping render/save.
             self._anim._draw_was_started = True
             plt.close(self._fig)

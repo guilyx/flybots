@@ -159,7 +159,7 @@ def main() -> None:
     title = ax3d.set_title("t = 0.0 s")
 
     anim = SimAnimator("consensus_formation", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(f: int) -> None:
         k = idx[f]

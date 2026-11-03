@@ -160,7 +160,7 @@ def main() -> None:
 
     title = viz.ax3d.set_title("RRT* Tree Growing")
     anim = SimAnimator("rrt_star_3d", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     n_segs = len(tree_segs_3d)
 

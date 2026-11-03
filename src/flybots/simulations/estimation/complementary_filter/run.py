@@ -175,7 +175,7 @@ def main() -> None:
     ax_d.legend(fontsize=6, ncol=2, loc="upper right")
 
     anim = SimAnimator("complementary_filter", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     trail_arts = viz.create_trail_artists(color="orange")
 

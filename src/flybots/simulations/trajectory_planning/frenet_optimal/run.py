@@ -226,7 +226,7 @@ def main() -> None:
     title_art = viz.ax3d.set_title("Phase 1: Frenet Sampling")
 
     anim = SimAnimator("frenet_optimal", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     local_goal_arr = np.array(local_goals) if local_goals else np.zeros((1, 3))
     local_plan_arr = local_plans if local_plans else []

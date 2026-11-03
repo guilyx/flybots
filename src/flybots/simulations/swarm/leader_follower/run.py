@@ -153,7 +153,7 @@ def main() -> None:
     all_snap = np.array(snap)
 
     anim = SimAnimator("leader_follower", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(f: int) -> None:
         step = idx[f]

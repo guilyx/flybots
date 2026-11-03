@@ -166,7 +166,7 @@ def main() -> None:
     title = ax_top.text(0.02, 0.97, "", transform=ax_top.transAxes, fontsize=9, va="top")
 
     anim = SimAnimator("relay_coverage", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(frame: int) -> None:
         step = idx[frame]

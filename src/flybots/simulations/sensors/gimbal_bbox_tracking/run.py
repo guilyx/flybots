@@ -222,7 +222,7 @@ def main() -> None:
     n_frames = len(frames)
 
     anim = SimAnimator("gimbal_bbox_tracking", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(f: int) -> None:
         k = frames[f]

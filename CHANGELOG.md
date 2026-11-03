@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **A guide to building on flybots** (`docs/guide/extending.md`): one
+  algorithm taken end to end — implementation, behaviour-pinning tests, a
+  simulation `flybots run` discovers, and its atlas page. Every snippet was
+  run against the package before it was written down.
+- `SimAnimator(..., figure=fig)` and the `SimAnimator.figure` property, so a
+  simulation that builds its own figure no longer sets the private `_fig`.
+  All 51 simulations that did now use it.
+- `FLYBOTS_SKIP_GIF=1` skips writing simulation GIFs. The pre-rename
+  `UAV_SIM_SKIP_GIF` still works.
+- Catalogue checks in the test suite: every simulation must ship
+  `__init__.py`, `__main__.py`, `README.md` and a docstring summary. Before,
+  a simulation missing `__main__.py` was listed with a `python -m` command
+  that failed.
+
 ### Fixed
 
 - **flybots no longer changes your matplotlib backend.** Importing
@@ -19,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   helpers draw on a bare `Figure`, and `SimAnimator` saves through Pillow's
   writer, which rasterises frames itself. Simulation scripts still select Agg
   explicitly, as scripts should.
+- `flybots run` reported `wrote <name>.gif` whenever a GIF existed on disk,
+  including when the run skipped writing it. It now reports only a GIF the
+  run actually wrote.
 
 ## [2.0.0] - 2026-08-27
 

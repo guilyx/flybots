@@ -115,7 +115,7 @@ def main() -> None:
     ax_d.legend(fontsize=5, loc="upper right")
 
     anim = SimAnimator("pure_pursuit", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
     title = viz.ax3d.set_title("Pure Pursuit")
 
     def update(f: int) -> None:

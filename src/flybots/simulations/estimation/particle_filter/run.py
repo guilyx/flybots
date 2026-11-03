@@ -214,7 +214,7 @@ def main() -> None:
     (neff_line,) = ax_neff.plot([], [], "b--", lw=0.6)
 
     anim = SimAnimator("particle_filter", out_dir=Path(__file__).parent)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
 
     trail_true = viz.create_trail_artists(color="black")
     trail_est = viz.create_trail_artists(color="dodgerblue")

@@ -180,7 +180,7 @@ def main() -> None:
     viz.draw_path(mission.tracking_path, color="cyan", lw=0.8, alpha=0.3, label="Plan")
 
     anim = SimAnimator("sensor_suite_demo", out_dir=Path(__file__).parent, dpi=60)
-    anim._fig = viz.fig
+    anim.figure = viz.fig
     trail_arts = viz.create_trail_artists(color="dodgerblue")
     fov_arts: list = []
     pc_arts: list = []

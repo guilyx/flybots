@@ -170,7 +170,7 @@ def main() -> None:
     links_clut = PathLossLink(REFERENCE_RANGE, 4.0, 6.0)
 
     anim = SimAnimator("link_budget", out_dir=Path(__file__).parent, dpi=72)
-    anim._fig = fig
+    anim.figure = fig
 
     def update(frame: int) -> None:
         step = idx[frame]
