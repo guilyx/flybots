@@ -41,3 +41,13 @@ def test_citation_version_matches_the_package():
         f"CITATION.cff says {cited}, the package is {version('flybots')}: "
         "bump CITATION.cff (version and date-released) with the release."
     )
+
+
+def test_ships_the_py_typed_marker():
+    """PEP 561: without it, type checkers treat every flybots import as Any.
+
+    pyproject.toml advertises ``Typing :: Typed``; this keeps that true.
+    """
+    from importlib.resources import files
+
+    assert files("flybots").joinpath("py.typed").is_file()

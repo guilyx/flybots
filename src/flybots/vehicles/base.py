@@ -85,8 +85,11 @@ class UAVBase(ABC):
             self._state = np.zeros(self.state_dim)
         self._time = time
 
-    def step(self, control: NDArray[np.floating], dt: float) -> None:
-        """Advance the dynamics by *dt* using RK4 integration."""
+    def step(self, control: NDArray[np.floating], dt: float) -> NDArray[np.floating]:
+        """Advance the dynamics by *dt* using RK4 integration.
+
+        Returns a copy of the new state, as every vehicle's ``step`` does.
+        """
         s = self._state
         k1 = self._dynamics(s, control)
         k2 = self._dynamics(s + 0.5 * dt * k1, control)
@@ -94,3 +97,4 @@ class UAVBase(ABC):
         k4 = self._dynamics(s + dt * k3, control)
         self._state = s + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
         self._time += dt
+        return self._state.copy()

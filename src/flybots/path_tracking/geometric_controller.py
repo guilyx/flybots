@@ -75,6 +75,14 @@ class GeometricControllerConfig:
         if self.kw is None:
             self.kw = 2.0 * self.attitude_damping * j * self.attitude_bandwidth
 
+    @property
+    def gains(self) -> tuple[float, float, float, float]:
+        """``(kx, kv, kR, kw)``, resolved: never ``None`` after construction."""
+        kx, kv, kR, kw = self.kx, self.kv, self.kR, self.kw
+        if kx is None or kv is None or kR is None or kw is None:
+            raise RuntimeError("gains are resolved in __post_init__; one was reset to None")
+        return kx, kv, kR, kw
+
 
 class GeometricController:
     """Geometric tracking controller on SE(3).
@@ -126,6 +134,7 @@ class GeometricController:
             ``[T, τx, τy, τz]`` body-frame wrench.
         """
         c = self.config
+        kx, kv, kR, kw = c.gains
         if target_vel is None:
             target_vel = np.zeros(3)
         if target_acc is None:
@@ -142,7 +151,7 @@ class GeometricController:
         # --- Position control ---
         e_pos = pos - target_pos
         e_vel = vel - target_vel
-        a_cmd = -c.kx * e_pos - c.kv * e_vel + c.gravity * e3 + target_acc
+        a_cmd = -kx * e_pos - kv * e_vel + c.gravity * e3 + target_acc
 
         # Clamp acceleration to avoid extreme attitudes
         a_horiz = np.linalg.norm(a_cmd[:2])
@@ -180,8 +189,8 @@ class GeometricController:
 
         inertia = np.asarray(c.inertia)
         tau = (
-            -c.kR * eR
-            - c.kw * e_omega
+            -kR * eR
+            - kw * e_omega
             + np.cross(omega, inertia @ omega)
             - inertia @ (_hat(omega) @ R.T @ Rd @ omega_d)
         )

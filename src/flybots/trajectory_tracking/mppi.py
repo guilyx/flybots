@@ -153,7 +153,7 @@ class MPPITracker:
                 # Score the state the control *produced*, so step t of the
                 # rollout lines up with step t of the reference.
                 sample_cost += self._cost(x, u, reference, t)
-                if return_rollouts:
+                if rollouts is not None:
                     rollouts[k, t] = x[:3]
             costs[k] = sample_cost
 

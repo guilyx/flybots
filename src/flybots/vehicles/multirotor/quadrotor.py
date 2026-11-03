@@ -109,6 +109,8 @@ class Quadrotor(Multirotor):
     than from its comment, which had it wrong.
     """
 
+    params: QuadrotorParams
+
     def __init__(self, params: QuadrotorParams | None = None) -> None:
         super().__init__(params or QuadrotorParams())
 
