@@ -36,7 +36,8 @@ the generated notes for that release when hand-written ones say it better.
   that failed.
 - **Citation metadata and a publication plan.** `CITATION.cff` gives the
   repository a "Cite this repository" button and makes flybots readable by
-  reference managers; a test keeps its version in step with the package. A new
+  reference managers. It names no version, so it never goes stale; a test
+  keeps it that way. A new
   [Citing and publication](https://guilyx.github.io/flybots/guide/citing) page
   states what flybots is for, how to cite it and the algorithms in it, and the
   intent to submit it as a software paper to the Journal of Open Source
@@ -57,12 +58,6 @@ the generated notes for that release when hand-written ones say it better.
   `target_course` on their shared base, which reads them.
 - `GeometricControllerConfig.gains` returns the resolved
   `(kx, kv, kR, kw)`; the controller no longer works on `float | None`.
-### Deprecated
-
-- `flybots.vehicles.payloads.gimbal`: a second gimbal model, never used,
-  tested or documented, beside `flybots.sensors.gimbal`, which the
-  simulations use. Importing it now warns; it goes in 3.0.
-
 - **CI actions moved off Node 20**, which GitHub has deprecated. checkout v7,
   setup-uv v10, setup-node v7, upload-artifact v7, download-artifact v8,
   configure-pages v6, upload-pages-artifact v5 and deploy-pages v5, all still
@@ -70,6 +65,12 @@ the generated notes for that release when hand-written ones say it better.
   Python and docs dependencies.
 - The repository stores LF line endings (`* text=auto eol=lf`). Eleven
   modules had CRLF, so any edit to them showed as a whole-file diff.
+
+### Deprecated
+
+- `flybots.vehicles.payloads.gimbal`: a second gimbal model, never used,
+  tested or documented, beside `flybots.sensors.gimbal`, which the
+  simulations use. Importing it now warns; it goes in 3.0.
 
 ### Fixed
 
