@@ -1,6 +1,9 @@
 # Weekly, grouped update PRs so the pins in CI stay current without one PR
 # per package. Every workflow action is pinned to a commit SHA with the
 # version in a comment; Dependabot updates both together.
+#
+# Commit prefixes are `ci` and `build`, which release-please does not treat
+# as releasable: a dependency refresh alone never cuts a version.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -13,10 +16,15 @@ updates:
     commit-message:
       prefix: ci
 
+  # flybots is a library: pyproject.toml states the oldest versions it works
+  # with, and raising those floors on every refresh would force users to
+  # upgrade numpy/scipy/matplotlib for no reason. Only uv.lock -- what CI and
+  # contributors install -- is refreshed.
   - package-ecosystem: uv
     directory: /
     schedule:
       interval: weekly
+    versioning-strategy: lockfile-only
     groups:
       python:
         patterns: ["*"]
@@ -30,5 +38,11 @@ updates:
     groups:
       docs:
         patterns: ["*"]
+    ignore:
+      # VitePress 1.x peers on markdown-it-mathjax3 ^4; v5 fails `npm ci`.
+      # Lift this with the move to VitePress 2.
+      - dependency-name: markdown-it-mathjax3
+        update-types: ["version-update:semver-major"]
     commit-message:
-      prefix: docs
+      prefix: build
+      include: scope
