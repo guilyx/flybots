@@ -20,6 +20,7 @@ tunnel data on a specific airframe.
 
 from __future__ import annotations
 
+import copy
 from dataclasses import replace
 from enum import Enum
 
@@ -157,10 +158,10 @@ _PRESETS: dict[FixedWingPreset, FixedWingParams] = {
 
 
 def get_fixed_wing_params(preset: FixedWingPreset) -> FixedWingParams:
-    """Return the parameter set for a named airframe."""
+    """Return a copy of the parameter set for a named airframe."""
     if preset is FixedWingPreset.CUSTOM:
         raise ValueError("CUSTOM has no stored parameters — pass overrides to create_fixed_wing.")
-    return _PRESETS[preset]
+    return copy.deepcopy(_PRESETS[preset])
 
 
 def create_fixed_wing(
@@ -175,7 +176,6 @@ def create_fixed_wing(
     """
     if preset is FixedWingPreset.CUSTOM:
         return FixedWing(FixedWingParams(**overrides))
-    base = _PRESETS[preset]
-    if not overrides:
-        return FixedWing(base)
-    return FixedWing(replace(base, **overrides))
+    # A deep copy, so one aircraft's parameters (and the aerodynamic and
+    # propulsion blocks nested in them) are never another's.
+    return FixedWing(replace(copy.deepcopy(_PRESETS[preset]), **overrides))

@@ -32,6 +32,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- **Aircraft built from the same preset no longer share parameters.**
+  `create_quadrotor`, `create_multirotor`, `create_fixed_wing`, `get_params`
+  and `get_fixed_wing_params` handed out the module-level preset object, or a
+  shallow copy of it. Setting `quad.params.mass` for a payload, or editing
+  `inertia`, `rotors` or the fixed-wing `coeffs` on one aircraft, changed
+  every aircraft built from that preset afterwards in the same process,
+  gym environments included. Every factory now returns a deep copy.
 - **flybots no longer changes your matplotlib backend.** Importing
   `flybots.visualization` called `matplotlib.use("Agg")` at module level, and
   `flybots.gym.render`'s helpers did it on every call. The backend is

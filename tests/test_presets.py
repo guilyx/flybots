@@ -110,3 +110,49 @@ class TestPresetsCanFly:
             quad.step(hover, 0.005)
 
         assert quad.state[2] == pytest.approx(10.0, abs=0.05)
+
+
+class TestPresetsAreNotShared:
+    """Changing one aircraft's parameters must not change the next one's.
+
+    The preset tables are module-level. Handing them out directly meant a
+    payload's mass or a damaged motor set on one vehicle silently applied to
+    every vehicle built from the same preset afterwards.
+    """
+
+    @pytest.mark.parametrize("overrides", [{}, {"mass": 2.0}])
+    def test_quadrotor_params_are_private(self, overrides):
+        first = create_quadrotor(VehiclePreset.RACING_250, **overrides)
+        first.params.mass = 9.0
+        first.params.inertia[0, 0] = 99.0
+        fresh = create_quadrotor(VehiclePreset.RACING_250)
+        assert fresh.params.mass == pytest.approx(1.5)
+        assert fresh.params.inertia[0, 0] == pytest.approx(0.0082)
+
+    def test_multirotor_rotors_are_private(self):
+        from flybots.vehicles.presets import create_multirotor
+
+        first = create_multirotor(VehiclePreset.HEX_S550)
+        first.params.rotors.pop()
+        assert create_multirotor(VehiclePreset.HEX_S550).n_rotors == 6
+
+    def test_get_params_returns_a_copy(self):
+        get_params(VehiclePreset.CRAZYFLIE).mass = 50.0
+        assert get_params(VehiclePreset.CRAZYFLIE).mass < 0.1
+
+    @pytest.mark.parametrize("overrides", [{}, {"mass": 4.0}])
+    def test_fixed_wing_params_are_private(self, overrides):
+        from flybots.vehicles.fixed_wing.presets import (
+            FixedWingPreset,
+            create_fixed_wing,
+            get_fixed_wing_params,
+        )
+
+        stock = get_fixed_wing_params(FixedWingPreset.AEROSONDE)
+        mass, cl0 = stock.mass, stock.coeffs.CL0
+        first = create_fixed_wing(FixedWingPreset.AEROSONDE, **overrides)
+        first.fw_params.mass = 99.0
+        first.fw_params.coeffs.CL0 += 1.0
+        fresh = create_fixed_wing(FixedWingPreset.AEROSONDE).fw_params
+        assert fresh.mass == pytest.approx(mass)
+        assert fresh.coeffs.CL0 == pytest.approx(cl0)

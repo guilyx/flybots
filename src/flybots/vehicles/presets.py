@@ -22,6 +22,7 @@ direction it should.
 
 from __future__ import annotations
 
+import copy
 from enum import Enum
 
 import numpy as np
@@ -156,10 +157,15 @@ def _apply_overrides(
     base: QuadrotorParams | MultirotorParams,
     overrides: dict[str, object],
 ) -> QuadrotorParams | MultirotorParams:
-    """Return a copy of *base* with the named fields replaced."""
-    if not overrides:
-        return base
-    kw = {f.name: getattr(base, f.name) for f in base.__dataclass_fields__.values()}
+    """Return a deep copy of *base* with the named fields replaced.
+
+    Always a copy, overrides or not: the preset tables are module-level, and
+    handing one out let a change to one aircraft's parameters (a payload's
+    mass, a damaged motor's ``k_thrust``) leak into every aircraft built from
+    the same preset afterwards. Deep, because ``inertia`` and ``rotors`` are
+    mutable too.
+    """
+    kw = {f.name: copy.deepcopy(getattr(base, f.name)) for f in base.__dataclass_fields__.values()}
     unknown = set(overrides) - set(kw)
     if unknown:
         raise TypeError(
@@ -231,5 +237,5 @@ def create_multirotor(
 
 
 def get_params(preset: VehiclePreset) -> QuadrotorParams | MultirotorParams:
-    """Return the parameters for a named preset."""
-    return _PRESETS[preset]
+    """Return a copy of the parameters for a named preset."""
+    return copy.deepcopy(_PRESETS[preset])
