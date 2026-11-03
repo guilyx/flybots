@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
-import subprocess  # nosec B404 - builds throwaway git repos with fixed arguments
+import subprocess  # nosec B404
 import sys
 from datetime import date
 from pathlib import Path

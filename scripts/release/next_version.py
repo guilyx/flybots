@@ -31,7 +31,8 @@ from __future__ import annotations
 
 import argparse
 import re
-import subprocess  # nosec B404 - runs git with fixed arguments
+import shutil
+import subprocess  # nosec B404
 import sys
 from dataclasses import dataclass
 from datetime import date
@@ -146,8 +147,13 @@ def changelog_section(changelog: Path, version: str) -> str | None:
 
 
 def _git(*args: str) -> str:
-    return subprocess.run(  # noqa: S603  # nosec B603 - fixed git argv
-        ["git", *args], check=True, capture_output=True, text=True
+    # Resolved to an absolute path so the command cannot be shadowed through
+    # the working directory; the arguments are fixed by this module.
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("git is not on PATH")
+    return subprocess.run(  # noqa: S603  # nosec B603
+        [git, *args], check=True, capture_output=True, text=True
     ).stdout
 
 
