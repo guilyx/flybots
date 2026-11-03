@@ -102,11 +102,37 @@ test(gym): cover landing termination cases
 ```
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`,
-`build`, `ci`, `chore`.
+`build`, `ci`, `chore`, `revert`.
+
+## Releases
+
+Releases are automatic, and **your pull request's title decides them**.
+PRs are squash-merged, so the title becomes the single commit on `main`,
+and [release-please](https://github.com/googleapis/release-please) reads
+those commits to work out the next version:
+
+| PR title | next version from 2.0.0 |
+|---|---|
+| `fix(vehicles): …` | 2.0.1 (patch) |
+| `feat(planning): …` | 2.1.0 (minor) |
+| `feat!: …`, or `BREAKING CHANGE:` in the description | 3.0.0 (major) |
+| `docs`, `test`, `ci`, `chore`, `refactor`, `build`, `style` | no release on their own |
+
+A check on every PR fails until the title is a Conventional Commit. Pick
+the type for what a *user* of flybots will notice: a bug fix that also adds
+a test is a `fix`, not a `test`.
+
+After each merge, release-please updates one open pull request titled
+`chore(release): X.Y.Z` with the next version and its changelog. Merging
+that PR is the release: it bumps `pyproject.toml`, `uv.lock` and
+`CITATION.cff`, tags `vX.Y.Z`, creates the GitHub release and publishes to
+PyPI. Nobody edits version numbers or `CHANGELOG.md` by hand.
 
 ## Pull requests
 
 - Every PR must pass `pre-commit run --all-files` and `uv run pytest`.
+- The title is a Conventional Commit (see [Releases](#releases)) — it
+  becomes the changelog entry.
 - Describe *what changed and why*. If you fixed a bug, say what the
   incorrect behaviour was and how you know it is fixed.
 - Regenerating GIFs is optional — say so if you did, since they are large
