@@ -9,6 +9,31 @@ From 2.1.0 on, entries are written by
 [release-please](https://github.com/googleapis/release-please) from the
 titles of merged pull requests; see "Releases" in CONTRIBUTING.md.
 
+## [2.1.0](https://github.com/guilyx/flybots/compare/v2.0.0...v2.1.0) (2026-11-03)
+
+
+### Added
+
+* **sims:** six demos for the barrier and comms modules ([97b5fae](https://github.com/guilyx/flybots/commit/97b5faed6bd036a4f2feb0c217117e5a76dd3ace))
+* **sims:** six demos for the barrier and comms modules ([96dd648](https://github.com/guilyx/flybots/commit/96dd64888c86bb02384717d212b2fda19b3206aa))
+* **typing:** ship py.typed and fix the public type gaps ([#88](https://github.com/guilyx/flybots/issues/88)) ([a5bcb19](https://github.com/guilyx/flybots/commit/a5bcb196d5dba98cdc69b829f1032a4accffcaa3))
+
+
+### Fixed
+
+* **cli:** never write simulation output into site-packages ([#92](https://github.com/guilyx/flybots/issues/92)) ([127ac90](https://github.com/guilyx/flybots/commit/127ac902f751b1db7c4f64fb21c74e2e7b088a0a))
+* **logging:** end simulation logs with a newline ([37a63d1](https://github.com/guilyx/flybots/commit/37a63d1fbd423592f179279c13418cd3b291a5bd))
+* **sims:** draw aircraft in every simulation, and stop tracking logs ([11221e6](https://github.com/guilyx/flybots/commit/11221e67b58445a62a4d0b7e003ba16e1efb8dee))
+* **sims:** give the barrier and mesh scenes something to show ([d3bc75a](https://github.com/guilyx/flybots/commit/d3bc75abdf31556c62370d7c90fefea64ffdce1c))
+* **vehicles:** stop presets handing out shared parameter objects ([#89](https://github.com/guilyx/flybots/issues/89)) ([f2142bf](https://github.com/guilyx/flybots/commit/f2142bf3374638fff48a955ff222020ad274e3db))
+* **viz:** stop changing the caller's matplotlib backend ([#85](https://github.com/guilyx/flybots/issues/85)) ([a41d67b](https://github.com/guilyx/flybots/commit/a41d67b6673e5be7b30ec6a77de3c2e763a42f0b))
+
+
+### Documentation
+
+* add citation metadata and the plan to publish ([#86](https://github.com/guilyx/flybots/issues/86)) ([d742744](https://github.com/guilyx/flybots/commit/d7427440488c0e130447d871fb1c469dd20c4742))
+* **guide:** add "Build on flybots" and make the extension path public ([#87](https://github.com/guilyx/flybots/issues/87)) ([50a9f57](https://github.com/guilyx/flybots/commit/50a9f5798350cfa3259d5f4c5ff5d3148d70fe82))
+
 ## [Unreleased]
 
 ### Added
