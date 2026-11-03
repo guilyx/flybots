@@ -17,8 +17,8 @@ abstract: >-
 authors:
   - family-names: Lejeune
     given-names: Erwin
-version: 2.0.0
-date-released: 2026-08-27
+version: 2.0.0 # x-release-please-version
+date-released: 2026-08-27 # x-release-please-date
 license: MIT
 repository-code: "https://github.com/guilyx/flybots"
 url: "https://guilyx.github.io/flybots/"

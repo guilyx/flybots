@@ -35,11 +35,16 @@ def test_citation_version_matches_the_package():
 
     cff = (Path(__file__).resolve().parents[1] / "CITATION.cff").read_text()
     cited = next(
-        line.split(":", 1)[1].strip() for line in cff.splitlines() if line.startswith("version:")
+        # release-please bumps the line it finds the x-release-please-version
+        # marker on, so the value carries a trailing YAML comment.
+        line.split(":", 1)[1].split("#", 1)[0].strip()
+        for line in cff.splitlines()
+        if line.startswith("version:")
     )
     assert cited == version("flybots"), (
         f"CITATION.cff says {cited}, the package is {version('flybots')}: "
-        "bump CITATION.cff (version and date-released) with the release."
+        "release-please bumps both; if they disagree, check the "
+        "x-release-please-version marker in CITATION.cff."
     )
 
 

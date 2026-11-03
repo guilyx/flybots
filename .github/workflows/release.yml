@@ -1,6 +1,27 @@
 # Erwin Lejeune - 2026-08-18
 #
-# Builds the distribution and publishes it to PyPI as `flybots`.
+# Releases flybots: versioning with release-please, publishing to PyPI.
+#
+# How a release happens
+# ---------------------
+# 1. Pull requests are squash-merged, and their titles are Conventional
+#    Commits (`pr-title.yml` enforces it). The title becomes the commit
+#    on main, so it is what decides the version bump:
+#        fix: ...                 -> patch   2.0.0 -> 2.0.1
+#        feat: ...                -> minor   2.0.0 -> 2.1.0
+#        feat!: ... / BREAKING CHANGE: in the body -> major 2.0.0 -> 3.0.0
+#    docs/test/ci/chore/refactor/build/style alone do not cut a release.
+# 2. On every push to main, release-please keeps one open release PR,
+#    "chore(release): X.Y.Z", with the next version and its changelog.
+#    Each merged PR updates it; nothing is released yet.
+# 3. Merging that release PR bumps the version in pyproject.toml, uv.lock
+#    and CITATION.cff, tags vX.Y.Z and creates the GitHub release. The
+#    build and publish jobs below then run in this same workflow.
+#
+# Publishing happens here, not on the tag push, because a tag created with
+# the default GITHUB_TOKEN never triggers another workflow. A tag pushed by
+# hand still publishes, as before, and a manual run on a tag with dry-run
+# off re-publishes it.
 #
 # Publishing uses PyPI Trusted Publishing (OIDC), so there is no API token
 # in the repository secrets. It needs a one-time setup on PyPI: on the
@@ -13,6 +34,7 @@ name: Release
 
 on:
   push:
+    branches: [main]
     tags: ["v*"]
   workflow_dispatch:
     inputs:
@@ -24,13 +46,63 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
+  release-please:
+    name: Release PR
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # tags, GitHub releases, the release branch
+      pull-requests: write # opens and updates the release PR
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        id: release
+        with:
+          # Optional. With only the default token, the release PR is opened
+          # by github-actions[bot] and CI does not run on it (GitHub does not
+          # let GITHUB_TOKEN trigger workflows). A fine-grained PAT or GitHub
+          # App token stored as RELEASE_PLEASE_TOKEN makes CI run there too.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
   build:
     name: Build distributions
+    needs: release-please
+    # `always()` so a tag push or a manual run, where release-please is
+    # skipped, still builds.
+    if: >-
+      always() && (
+        needs.release-please.outputs.release_created == 'true'
+        || startsWith(github.ref, 'refs/tags/v')
+        || github.event_name == 'workflow_dispatch'
+      )
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
+      - name: Which tag
+        id: tag
+        env:
+          RELEASED: ${{ needs.release-please.outputs.tag_name }}
+        run: |
+          if [ -n "$RELEASED" ]; then
+            echo "tag=$RELEASED" >> "$GITHUB_OUTPUT"
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Build exactly what was tagged, not whatever main is now.
+          ref: ${{ steps.tag.outputs.tag || github.ref }}
           # The sdist bundles the README, not the media it links to, so the
           # 6 MB promo video is dead weight for this job.
           lfs: false
@@ -43,10 +115,12 @@ jobs:
       # A tag that disagrees with pyproject uploads a version nobody can
       # reproduce from the tag. Caught here, before anything is built.
       - name: Tag matches the packaged version
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: steps.tag.outputs.tag != ''
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
         run: |
           packaged=$(uv version --short)
-          tagged="${GITHUB_REF_NAME#v}"
+          tagged="${TAG#v}"
           echo "pyproject: $packaged, tag: $tagged"
           test "$packaged" = "$tagged"
 
@@ -76,7 +150,12 @@ jobs:
   publish:
     name: Publish to PyPI
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v') && !inputs.dry-run
+    # Only something that was tagged is ever published, and a manual run
+    # only when dry-run is switched off.
+    if: >-
+      always() && needs.build.result == 'success'
+      && needs.build.outputs.tag != ''
+      && (github.event_name != 'workflow_dispatch' || !inputs.dry-run)
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -93,5 +172,8 @@ jobs:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: latest
+      # --check-url skips files PyPI already has, so a second run for the
+      # same tag (a re-run, or the tag push a RELEASE_PLEASE_TOKEN triggers
+      # after the release run) succeeds instead of failing on duplicates.
       - name: Upload
-        run: uv publish --trusted-publishing always
+        run: uv publish --trusted-publishing always --check-url https://pypi.org/simple/
