@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-Nothing yet.
+### Fixed
+
+- **flybots no longer changes your matplotlib backend.** Importing
+  `flybots.visualization` called `matplotlib.use("Agg")` at module level, and
+  `flybots.gym.render`'s helpers did it on every call. The backend is
+  process-wide, so in a notebook this silently stopped inline plots and
+  `plt.show()` for the rest of the session -- including
+  `plot_trajectory(..., show=True)` from this package -- the moment anything
+  visual was imported. The library now leaves the backend alone: the render
+  helpers draw on a bare `Figure`, and `SimAnimator` saves through Pillow's
+  writer, which rasterises frames itself. Simulation scripts still select Agg
+  explicitly, as scripts should.
 
 ## [2.0.0] - 2026-08-27
 
