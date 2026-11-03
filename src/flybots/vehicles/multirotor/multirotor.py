@@ -33,6 +33,7 @@ References
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Protocol
 
 import numpy as np
 from numpy.typing import NDArray
@@ -40,7 +41,36 @@ from numpy.typing import NDArray
 from flybots.vehicles.components.allocation import ControlAllocation, Rotor, x_layout
 from flybots.vehicles.components.motor import Motor
 
-__all__ = ["Multirotor", "MultirotorParams"]
+__all__ = ["AirframeParams", "Multirotor", "MultirotorParams"]
+
+
+class AirframeParams(Protocol):
+    """What :class:`Multirotor` needs from a parameter set.
+
+    :class:`MultirotorParams` stores an explicit rotor layout;
+    :class:`~flybots.vehicles.multirotor.quadrotor.QuadrotorParams` derives
+    one from an arm length and a frame letter. Both satisfy this, so a
+    subclass can narrow ``params`` to its own type and keep its own fields
+    visible to a type checker.
+    """
+
+    mass: float
+    inertia: NDArray[np.floating]
+    k_thrust: float
+    k_torque: float
+    motor_tau: float
+    omega_max: float
+    drag_coeff: float
+    gravity: float
+    saturation: str
+    name: str
+
+    @property
+    def rotors(self) -> list[Rotor]: ...
+
+    @property
+    def max_rotor_thrust(self) -> float: ...
+
 
 #: Body rates above this are a diverging controller, not a manoeuvre. Kept
 #: at the historical quadrotor value so the guard behaves identically.
@@ -129,7 +159,9 @@ class Multirotor:
     IVX, IVY, IVZ = 6, 7, 8
     IP, IQ, IR = 9, 10, 11
 
-    def __init__(self, params: MultirotorParams | None = None) -> None:
+    params: AirframeParams
+
+    def __init__(self, params: AirframeParams | None = None) -> None:
         self.params = params or MultirotorParams()
         self.mixer = self._build_mixer()
         # The motors have to line up with the mixer's columns, so the layout

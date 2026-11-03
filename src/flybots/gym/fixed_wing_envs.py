@@ -66,6 +66,12 @@ class FixedWingEnvConfig(EnvConfig):
 class _FixedWingTask(UAVEnv):
     """Shared plumbing for the fixed-wing tasks."""
 
+    # Each task sets these in its own reset; declared here because the shared
+    # observation and reward read them.
+    goal: NDArray[np.floating]
+    target_airspeed: float
+    target_course: float
+
     def __init__(self, config: FixedWingEnvConfig | None = None) -> None:
         self.config: FixedWingEnvConfig = config or FixedWingEnvConfig()
         self.aircraft = create_fixed_wing(self.config.preset)

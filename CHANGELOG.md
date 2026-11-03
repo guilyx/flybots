@@ -29,6 +29,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   states what flybots is for, how to cite it and the algorithms in it, and the
   intent to submit it as a software paper to the Journal of Open Source
   Education, with the Journal of Open Source Software as the fallback.
+- **flybots ships type information** (PEP 561 `py.typed`). The package has
+  long advertised `Typing :: Typed` without the marker, so mypy and pyright
+  treated every flybots import as `Any`. A test now keeps the marker in place.
+- `AirframeParams`, the protocol `Multirotor` needs from a parameter set.
+  `Quadrotor.params` is typed `QuadrotorParams`, so `arm_length` and `frame`
+  type-check instead of being reported missing.
+
+### Changed
+
+- `UAVBase.step()` returns the new state, as `Multirotor`, `FixedWing` and
+  `Tiltrotor` already did. It used to return `None`, which made the
+  subclasses' signatures incompatible with their base.
+- The fixed-wing gym tasks declare `goal`, `target_airspeed` and
+  `target_course` on their shared base, which reads them.
+- `GeometricControllerConfig.gains` returns the resolved
+  `(kx, kv, kR, kw)`; the controller no longer works on `float | None`.
 
 ### Fixed
 
