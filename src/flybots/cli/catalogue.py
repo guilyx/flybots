@@ -16,6 +16,8 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+from flybots._output import resolve_output_dir
+
 __all__ = ["SimulationEntry", "discover", "resolve", "categories", "SIMULATION_ROOT"]
 
 SIMULATION_ROOT = Path(__file__).resolve().parent.parent / "simulations"
@@ -40,8 +42,13 @@ class SimulationEntry:
         return f"python -m flybots.simulations.{self.category}.{self.name}"
 
     @property
+    def gif_path(self) -> Path:
+        """Where this simulation writes its GIF (see :mod:`flybots._output`)."""
+        return resolve_output_dir(self.directory) / f"{self.name}.gif"
+
+    @property
     def gif(self) -> Path | None:
-        candidate = self.directory / f"{self.name}.gif"
+        candidate = self.gif_path
         return candidate if candidate.exists() else None
 
     @property

@@ -31,6 +31,8 @@ from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d import Axes3D
 from numpy.typing import NDArray
 
+from flybots._output import resolve_output_dir
+
 # No ``matplotlib.use(...)`` here. The backend is process-wide state that
 # belongs to whoever imported this library: forcing Agg at import time
 # silently broke ``plt.show()`` and notebook inline plots for anyone who so
@@ -82,7 +84,9 @@ class SimAnimator:
         figure: Figure | None = None,
     ) -> None:
         self.name = name
-        self.out_dir = Path(out_dir)
+        # Redirected away from site-packages for installed copies; see
+        # flybots._output.
+        self.out_dir = resolve_output_dir(out_dir)
         self.fps = fps
         self.dpi = dpi
         self._fig: Figure | None = figure
