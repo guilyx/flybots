@@ -22,6 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `__init__.py`, `__main__.py`, `README.md` and a docstring summary. Before,
   a simulation missing `__main__.py` was listed with a `python -m` command
   that failed.
+- **Citation metadata and a publication plan.** `CITATION.cff` gives the
+  repository a "Cite this repository" button and makes flybots readable by
+  reference managers; a test keeps its version in step with the package. A new
+  [Citing and publication](https://guilyx.github.io/flybots/guide/citing) page
+  states what flybots is for, how to cite it and the algorithms in it, and the
+  intent to submit it as a software paper to the Journal of Open Source
+  Education, with the Journal of Open Source Software as the fallback.
 
 ### Fixed
 

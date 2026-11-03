@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: >-
+  If you use flybots in teaching, research or software, please cite it as
+  below. Each algorithm also cites its own source in its module docstring;
+  please cite those too when your work relies on a specific method.
+type: software
+title: "flybots: flight algorithms for autonomous UAVs, from scratch"
+abstract: >-
+  flybots is an open-source Python framework of autonomous-UAV algorithms
+  written from scratch: multirotor, fixed-wing and VTOL flight models with
+  the physics written out in full, control, planning, estimation,
+  perception, swarming and safety algorithms, a runnable simulation for
+  each, and reinforcement-learning environments. It is built to be extended:
+  an algorithm is implemented once, next to its citation, and comes with a
+  simulation, tests that assert on flight behaviour, and a documentation
+  page, so complex methods can be read, run, modified and explained.
+authors:
+  - family-names: Lejeune
+    given-names: Erwin
+version: 2.0.0
+date-released: 2026-08-27
+license: MIT
+repository-code: "https://github.com/guilyx/flybots"
+url: "https://guilyx.github.io/flybots/"
+keywords:
+  - uav
+  - drone
+  - quadrotor
+  - fixed-wing
+  - vtol
+  - robotics
+  - control
+  - path planning
+  - state estimation
+  - reinforcement learning
+  - education

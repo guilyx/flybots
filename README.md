@@ -190,6 +190,15 @@ here has been validated against a real airframe. Do not fly hardware on
 control code taken from this repository without independent verification.
 See [SECURITY.md](https://github.com/guilyx/flybots/blob/main/SECURITY.md).
 
+## Citing
+
+If flybots helps your teaching, research or software, please cite it —
+GitHub's **Cite this repository** button reads
+[`CITATION.cff`](https://github.com/guilyx/flybots/blob/main/CITATION.cff).
+We intend to publish it as a peer-reviewed software paper; the plan and its
+status are in
+[Citing and publication](https://guilyx.github.io/flybots/guide/citing).
+
 ## License
 
 MIT — see [LICENSE](https://github.com/guilyx/flybots/blob/main/LICENSE).
