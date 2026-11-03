@@ -1,3 +1,8 @@
+# Line endings: LF in the repository, whatever the contributor's platform.
+# A handful of modules had arrived with CRLF, which turns any edit to them
+# into a whole-file diff.
+* text=auto eol=lf
+
 # The 44 simulation GIFs live in Git LFS. The docs and README link them
 # through media.githubusercontent.com -- which is the LFS media endpoint --
 # so neither the docs build nor CI ever has to check LFS out.
