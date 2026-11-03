@@ -49,6 +49,11 @@ titles of merged pull requests; see "Releases" in CONTRIBUTING.md.
   `target_course` on their shared base, which reads them.
 - `GeometricControllerConfig.gains` returns the resolved
   `(kx, kv, kR, kw)`; the controller no longer works on `float | None`.
+### Deprecated
+
+- `flybots.vehicles.payloads.gimbal`: a second gimbal model, never used,
+  tested or documented, beside `flybots.sensors.gimbal`, which the
+  simulations use. Importing it now warns; it goes in 3.0.
 
 - **CI actions moved off Node 20**, which GitHub has deprecated. checkout v7,
   setup-uv v10, setup-node v7, upload-artifact v7, download-artifact v8,
