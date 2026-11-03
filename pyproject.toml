@@ -37,9 +37,9 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "numpy>=2.0",
-    "scipy>=1.14",
-    "matplotlib>=3.9",
+    "numpy>=2.5.4",
+    "scipy>=1.18.1",
+    "matplotlib>=3.11.2",
 ]
 
 [project.urls]
@@ -58,8 +58,8 @@ flybots = "flybots.cli.main:main"
 uav-sim = "flybots.cli.main:main_deprecated_alias"
 
 [project.optional-dependencies]
-gym = ["gymnasium>=1.0"]
-video = ["imageio-ffmpeg>=0.5"]
+gym = ["gymnasium>=1.4.0"]
+video = ["imageio-ffmpeg>=0.7.0"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/flybots"]
@@ -87,13 +87,13 @@ exclude = [
 
 [dependency-groups]
 dev = [
-    "pytest>=9.0",
-    "pytest-cov>=6.0",
-    "pre-commit>=4.0",
-    "ruff>=0.8",
-    "mypy>=1.13",
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "pre-commit>=4.7.0",
+    "ruff>=0.17.3",
+    "mypy>=2.4.1",
     # Bundled ffmpeg binary, used by scripts/make_promo.py.
-    "imageio-ffmpeg>=0.5",
+    "imageio-ffmpeg>=0.7.0",
 ]
 
 [tool.pytest.ini_options]
