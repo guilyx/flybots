@@ -108,8 +108,8 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`,
 
 Releases are automatic, and **your pull request's title decides them**.
 PRs are squash-merged, so the title becomes the single commit on `main`,
-and [release-please](https://github.com/googleapis/release-please) reads
-those commits to work out the next version:
+and the release workflow reads the commits since the last release to work
+out the next version (the largest bump among them wins):
 
 | PR title | next version from 2.0.0 |
 |---|---|
@@ -122,11 +122,16 @@ A check on every PR fails until the title is a Conventional Commit. Pick
 the type for what a *user* of flybots will notice: a bug fix that also adds
 a test is a `fix`, not a `test`.
 
-After each merge, release-please updates one open pull request titled
-`chore(release): X.Y.Z` with the next version and its changelog. Merging
-that PR is the release: it bumps `pyproject.toml`, `uv.lock` and
-`CITATION.cff`, tags `vX.Y.Z`, creates the GitHub release and publishes to
-PyPI. Nobody edits version numbers or `CHANGELOG.md` by hand.
+Merging is the release. When the merged commits add up to a release, the
+workflow builds that version, publishes it to PyPI and creates the `vX.Y.Z`
+tag and GitHub release, with notes grouped from the PR titles. There is no
+release PR and no version number in the repository to edit: the version is
+the git tag, read at build time. `flybots --version` on an unreleased
+checkout reports the next patch as a dev version, e.g. `2.1.1.dev3`.
+
+Want hand-written notes for a release? Add a `## [X.Y.Z]` section for the
+upcoming version to `CHANGELOG.md` in the PR that triggers it; the workflow
+uses it instead of the generated list.
 
 ## Pull requests
 

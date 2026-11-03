@@ -2,7 +2,7 @@
 # per package. Every workflow action is pinned to a commit SHA with the
 # version in a comment; Dependabot updates both together.
 #
-# Commit prefixes are `ci` and `build`, which release-please does not treat
+# Commit prefixes are `ci` and `build`, which the release workflow does not treat
 # as releasable: a dependency refresh alone never cuts a version.
 version: 2
 updates:

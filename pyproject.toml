@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "flybots"
-version = "2.0.0"
+dynamic = ["version"]
 description = "From-scratch autonomous UAV algorithms: multirotor, fixed-wing and VTOL flight models, 53 runnable simulations and reinforcement-learning environments."
 readme = "README.md"
 license = "MIT"
@@ -60,6 +60,19 @@ uav-sim = "flybots.cli.main:main_deprecated_alias"
 [project.optional-dependencies]
 gym = ["gymnasium>=1.0"]
 video = ["imageio-ffmpeg>=0.5"]
+
+[tool.hatch.version]
+# The version is the git tag (vX.Y.Z), read at build time. Releases are cut by
+# tagging -- see .github/workflows/release.yml -- so nothing has to commit a
+# version bump to the protected main branch. Between releases a build reports
+# the next patch as a dev version, e.g. 2.1.1.dev3.
+source = "vcs"
+# A checkout with no tags in reach (a shallow clone, a source tarball without
+# .git) still builds, it just cannot claim a release number.
+fallback-version = "0.0.0"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/flybots"]
