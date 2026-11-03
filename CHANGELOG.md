@@ -5,14 +5,20 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-From 2.1.0 on, entries are written by
-[release-please](https://github.com/googleapis/release-please) from the
-titles of merged pull requests; see "Releases" in CONTRIBUTING.md.
+Releases are cut automatically when a pull request merges, and their notes
+are published on [GitHub Releases](https://github.com/guilyx/flybots/releases),
+generated from the merged pull request titles (see "Releases" in
+CONTRIBUTING.md). A section here, headed with the upcoming version, replaces
+the generated notes for that release when hand-written ones say it better.
 
-## [Unreleased]
+## [2.1.0] - 2026-11-03
 
 ### Added
 
+- **Six simulations for the barrier and comms modules**: geofence floor,
+  obstacle slalom and connectivity annulus (control barrier functions), and
+  link budget, resilient mesh and convoy escort (communication-aware
+  swarming), each with an atlas page.
 - `flybots run --out-dir DIR` (or `FLYBOTS_OUTPUT_DIR`) writes each
   simulation's GIF and log under `DIR/<simulation>/`.
 - **A guide to building on flybots** (`docs/guide/extending.md`): one

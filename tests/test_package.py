@@ -23,29 +23,20 @@ def test_version_matches_the_installed_distribution():
     assert flybots.__version__ == version("flybots")
 
 
-def test_citation_version_matches_the_package():
-    """``CITATION.cff`` is the one other place the version has to live.
+def test_citation_does_not_pin_a_version():
+    """``CITATION.cff`` must not carry a version.
 
-    GitHub's "Cite this repository" button and every reference manager read
-    it, so a citation pinned to an old version sends readers to code that
-    no longer matches what they are citing. It cannot be derived at build
-    time the way ``__version__`` is, so this test is what keeps it honest.
+    The version is the git tag, read at build time; releases are cut on merge
+    without committing anything to main. A version written in CITATION.cff
+    would therefore be stale after the next release, and GitHub's "Cite this
+    repository" would send readers to the wrong code. citing.md tells readers
+    to cite the version they used instead.
     """
     from pathlib import Path
 
     cff = (Path(__file__).resolve().parents[1] / "CITATION.cff").read_text()
-    cited = next(
-        # release-please bumps the line it finds the x-release-please-version
-        # marker on, so the value carries a trailing YAML comment.
-        line.split(":", 1)[1].split("#", 1)[0].strip()
-        for line in cff.splitlines()
-        if line.startswith("version:")
-    )
-    assert cited == version("flybots"), (
-        f"CITATION.cff says {cited}, the package is {version('flybots')}: "
-        "release-please bumps both; if they disagree, check the "
-        "x-release-please-version marker in CITATION.cff."
-    )
+    pinned = [line for line in cff.splitlines() if line.startswith(("version:", "date-released:"))]
+    assert not pinned, f"CITATION.cff pins {pinned}; the version lives in git tags only"
 
 
 def test_ships_the_py_typed_marker():

@@ -1,5 +1,5 @@
 # Pull requests are squash-merged, so the PR title becomes the commit on
-# main -- and release-please reads that commit to decide the next version
+# main -- and the release workflow reads that commit to decide the next version
 # (fix -> patch, feat -> minor, `!` or BREAKING CHANGE -> major). A title
 # that is not a Conventional Commit is invisible to it, so it is checked
 # here, before merge.
