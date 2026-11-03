@@ -1,12 +1,26 @@
 # Erwin Lejeune - 2026-02-17
-"""2-axis / 3-axis gimbal model for camera stabilisation."""
+"""2-axis gimbal model for camera stabilisation.
+
+.. deprecated:: 2.1
+    Use :mod:`flybots.sensors.gimbal`, the gimbal the simulations and tests
+    use. This module is a second, unused model of the same thing; it will be
+    removed in 3.0.
+"""
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 
 import numpy as np
 from numpy.typing import NDArray
+
+warnings.warn(
+    "flybots.vehicles.payloads.gimbal is deprecated and will be removed in 3.0; "
+    "use flybots.sensors.gimbal instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 
 @dataclass
