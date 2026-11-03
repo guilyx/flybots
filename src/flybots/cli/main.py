@@ -16,10 +16,12 @@ Built on argparse so the package stays dependency-free.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
 from flybots import __version__
+from flybots._output import OUTPUT_DIR_ENV
 from flybots.cli import catalogue
 from flybots.cli.console import heading, style, table
 
@@ -92,6 +94,8 @@ def _mtime(path: Path) -> int | None:
 
 
 def _cmd_run(args: argparse.Namespace) -> int:
+    if args.out_dir is not None:
+        os.environ[OUTPUT_DIR_ENV] = str(Path(args.out_dir).resolve())
     try:
         entries = catalogue.resolve(args.simulation)
     except KeyError as error:
@@ -108,7 +112,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
     failures = 0
     for entry in entries:
         print(f"\n{style('running', 'sky')} {style(entry.slug, 'bold')}")
-        before = _mtime(entry.directory / f"{entry.name}.gif")
+        before = _mtime(entry.gif_path)
         try:
             module = entry.load()
             module.main()
@@ -122,12 +126,10 @@ def _cmd_run(args: argparse.Namespace) -> int:
             continue
         # Only claim a GIF this run actually wrote: with FLYBOTS_SKIP_GIF=1,
         # or a simulation that does not animate, the file is the old one.
-        if entry.gif and _mtime(entry.gif) != before:
-            print(
-                style(f"  wrote {entry.gif.relative_to(Path.cwd())}", "green")
-                if entry.gif.is_relative_to(Path.cwd())
-                else style(f"  wrote {entry.gif}", "green")
-            )
+        gif = entry.gif_path
+        if _mtime(gif) not in (None, before):
+            shown = gif.relative_to(Path.cwd()) if gif.is_relative_to(Path.cwd()) else gif
+            print(style(f"  wrote {shown}", "green"))
     return 1 if failures else 0
 
 
@@ -481,6 +483,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_run.add_argument("simulation", help="slug, name or glob pattern")
     p_run.add_argument("--all", action="store_true", help="run every match")
     p_run.add_argument("--traceback", action="store_true", help="show full tracebacks")
+    p_run.add_argument(
+        "-o",
+        "--out-dir",
+        help="write GIFs and logs under DIR/<simulation>/ (default: next to the "
+        "simulation in a source checkout, ./flybots-output/ for an installed copy)",
+    )
     p_run.set_defaults(func=_cmd_run)
 
     p_info = sub.add_parser("info", help="show details for a simulation")

@@ -14,6 +14,8 @@ from typing import Any
 
 import numpy as np
 
+from flybots._output import resolve_output_dir
+
 
 def _to_serializable(obj: Any) -> Any:
     """Recursively convert numpy types to JSON-safe Python types."""
@@ -50,7 +52,7 @@ class SimLogger:
         downsample: int = 1,
     ) -> None:
         self._sim_name = sim_name
-        self._out_dir = Path(out_dir)
+        self._out_dir = resolve_output_dir(out_dir)
         self._downsample = max(1, downsample)
 
         self._metadata: dict[str, Any] = {}

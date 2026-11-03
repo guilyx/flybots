@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `flybots run --out-dir DIR` (or `FLYBOTS_OUTPUT_DIR`) writes each
+  simulation's GIF and log under `DIR/<simulation>/`.
 - **A guide to building on flybots** (`docs/guide/extending.md`): one
   algorithm taken end to end — implementation, behaviour-pinning tests, a
   simulation `flybots run` discovers, and its atlas page. Every snippet was
@@ -63,6 +65,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `inertia`, `rotors` or the fixed-wing `coeffs` on one aircraft, changed
   every aircraft built from that preset afterwards in the same process,
   gym environments included. Every factory now returns a deep copy.
+- **An installed flybots no longer writes into `site-packages`.** Every
+  simulation saved its GIF and log next to its own `run.py`, which for a
+  `pip install` is inside the environment: often read-only, and never where
+  a user would look. Installed copies now write to
+  `./flybots-output/<simulation>/`; a source checkout is unchanged.
 - **flybots no longer changes your matplotlib backend.** Importing
   `flybots.visualization` called `matplotlib.use("Agg")` at module level, and
   `flybots.gym.render`'s helpers did it on every call. The backend is

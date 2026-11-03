@@ -57,3 +57,6 @@ policies/*
 # Docs build output
 docs/.vitepress/dist/
 docs/.vitepress/cache/
+
+# Simulation output from `flybots run` outside a checkout layout
+flybots-output/

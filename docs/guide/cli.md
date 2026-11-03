@@ -31,12 +31,27 @@ flybots run pid_hover                    # by name
 flybots run path_planning/astar_3d       # by slug
 flybots run 'swarm/*' --all              # by glob
 flybots run ekf --traceback              # full traceback on failure
+flybots run pid_hover --out-dir results  # write under results/pid_hover/
 ```
 
 Accepts a bare name, a `category/name` slug, or a glob. A pattern matching
 several simulations lists them and stops unless `--all` is given.
 
-Each simulation writes its GIF and a JSON log next to its `run.py`.
+Each simulation writes a GIF and a JSON log of its key numbers. Where they
+go:
+
+| | output directory |
+|---|---|
+| `--out-dir DIR`, or `FLYBOTS_OUTPUT_DIR=DIR` | `DIR/<simulation>/` |
+| installed with `pip` | `./flybots-output/<simulation>/` |
+| a source checkout | next to the simulation's `run.py` |
+
+An installed copy never writes into `site-packages`. In a checkout, writing
+next to `run.py` is what keeps the atlas GIFs beside the code that made
+them.
+
+Set `FLYBOTS_SKIP_GIF=1` to run and log without writing the GIF, which is
+the slow part.
 
 ## `info` — details for one simulation
 
