@@ -46,6 +46,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `GeometricControllerConfig.gains` returns the resolved
   `(kx, kv, kR, kw)`; the controller no longer works on `float | None`.
 
+- **CI actions moved off Node 20**, which GitHub has deprecated. checkout v7,
+  setup-uv v10, setup-node v7, upload-artifact v7, download-artifact v8,
+  configure-pages v6, upload-pages-artifact v5 and deploy-pages v5, all still
+  pinned to commit SHAs. Dependabot now proposes grouped updates for actions,
+  Python and docs dependencies.
+- The repository stores LF line endings (`* text=auto eol=lf`). Eleven
+  modules had CRLF, so any edit to them showed as a whole-file diff.
+
 ### Fixed
 
 - **Aircraft built from the same preset no longer share parameters.**
